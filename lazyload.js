@@ -14,22 +14,22 @@ var $L = function (a, b) {
         d = document.getElementsByTagName("head")[0],
         e = function () { --c || b() };
     while (f --> 0) {
-        if (a[f].indexOf("js") != -1) {
+        if (a[f].indexOf("js") !== -1) {
             var g = document.createElement("script");
             g.src = a[f];
             g.async = true;
             g.onload = e;
             g.onreadystatechange = function () {
                 var a = g.readystate;
-                if (a == "loaded" || a == "complete") e()
+                if (a === "loaded" || a === "complete") e()
             }
         } else {
             c--;
             var g = document.createElement("link");
             g.rel = "stylesheet";
             g.type = "text/css";
-            g.href = a[f]
+            g.href = a[f];
         }
-        d.appendChild(g)
+        d.appendChild(g);
     }
-}
+};

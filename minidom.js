@@ -1,6 +1,6 @@
 /* 
     Mini DOM by github.com/1337
-    Provides DOM traversal and selection (something like jQuery)
+    Provides DOM selection (something like jQuery, but no DOM manipulation)
 
     MIT Licence
  */
