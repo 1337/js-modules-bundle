@@ -22,7 +22,7 @@ var $ = $ || {};
                 var el;
 
                 cellType = cellType || 'td';
-                innerClass = innerClass || 'day';
+                innerClass = innerClass || ('day day-' + innerHTML);
                 el = document.createElement(cellType);
 
                 if (innerHTML) {
