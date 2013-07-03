@@ -12,6 +12,16 @@ var $ = $ || {};
     var me = {},
         objectIdentityHelper = function (obj1, obj2) {
             // TODO: refactor
+        },
+        objectKeyLength = function (obj) {
+            // if the src deserves anything, stackoverflow.com/a/6723634
+            var res = 0;
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    res++;
+                }
+            }
+            return res;
         };
 
     if ($[moduleName]) {  // cool, it's already there
@@ -19,7 +29,8 @@ var $ = $ || {};
     }
 
     // this doesn't do anything because next line overwrites it
-    var wildcard = anything = {};  // works because ({} == {}) is false
+    var wildcard = {},
+        anything = wildcard;  // works because ({} == {}) is false
 
     me = function (input, branchObj) {
         // input: list
@@ -36,7 +47,7 @@ var $ = $ || {};
 
         for (i = 0; i < input.length; i++) {
             // go through all inputs, one by one.
-            for (j = 0; j < branchObj.length; j++) {
+            for (j in branchObj) {
                 if (branchObj.hasOwnProperty(j)) {
                     if (j.substr(0, 2) !== 'if') {
                         if (input[i] === branchObj[j] || input[i] === anything) {
@@ -83,10 +94,10 @@ var $ = $ || {};
             }
             // if the captured variable was "good", then it will never reach
             // here and cause an error
-            throw ('Cannot find exception from object');
+            console.log('Cannot find exception from object');
         } else {
             // neither none, one, some, nor all. how?
-            throw ('Unexpected error');
+            console.log('Unexpected error: %o', matchCases);
         }
     };
 
@@ -95,3 +106,12 @@ var $ = $ || {};
     }
     $[moduleName] = me;  // put it back (optional if you pubSub)
 }($, /* [desired namespace] */ 'branch'));
+
+
+
+console.log($.branch([], {}));
+console.log($.branch([1], {1: true}));
+console.log($.branch([true], {true: true}));
+console.log($.branch([false], {false: true}));
+console.log($.branch([null], {null: true}));
+console.log($.branch([undefined], {undefined: true}));
