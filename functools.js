@@ -26,10 +26,10 @@ var $ = $ || {};
                          .match(/function\s*.*\((.+)\)/)[1]
                          .split(',')
                          .map(function (v) {
-                             return paramsMap[v.trim()];
+                             return paramMap[v.trim()];
                           });
         return me.curry(func, params);
-    }
+    };
 
     if ($.pubSub) {
         $.pubSub(moduleName, [], me);  // register module
