@@ -1,5 +1,5 @@
 /*
-    Curry by github.com/1337
+    Functools by github.com/1337
 
     MIT Licence
 */
@@ -22,6 +22,12 @@ var $ = $ || {};
     };
     
     me.partial = function (func, paramMap) {
+        /*
+            $.functools.partial(function (hello, world) {
+                return [hello, world];    
+            }, {'world': 4, 'hello': 5})()
+            > [5, 4]
+        */
         var params = func.toString()
                          .match(/function\s*.*\((.+)\)/)[1]
                          .split(',')
