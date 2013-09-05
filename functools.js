@@ -29,7 +29,7 @@ var $ = $ || {};
             > [5, 4]
         */
         var params = func.toString()
-                         .match(/function\s*.*\((.+)\)/)[1]
+                         .match(/function\s*.*\((.*)\)/)[1]
                          .split(',')
                          .map(function (v) {
                              return paramMap[v.trim()];
