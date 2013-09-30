@@ -20,7 +20,7 @@ var $ = $ || {};
             return func.apply(undefined, args);
         };
     };
-    
+
     me.partial = function (func, paramMap) {
         /*
             $.functools.partial(function (hello, world) {
@@ -35,6 +35,27 @@ var $ = $ || {};
                              return paramMap[v.trim()];
                           });
         return me.curry(func, params);
+    };
+
+    /** @decorator */
+    me.typed = function (types, fn) {
+        var context = this,
+            TypeError = function (message) {
+                this.name = "TypeError";
+                this.message = message || "Parameter type mismatch";
+            };
+        return function () {
+            var i, argType, reqType;
+            for (i = 0; i < arguments.length; i++) {
+                argType = typeof arguments[i];
+                reqType = typeof types[i];
+                if (argType !== reqType) {
+                    throw new TypeError("Expected <" + reqType + ">, " +
+                                        "got <" + argType + ">");
+                }
+            }
+            return fn.apply(context, arguments);
+        };
     };
 
     if ($.pubSub) {
