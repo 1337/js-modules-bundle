@@ -1,44 +1,42 @@
-/**
- * commonjsStrictGlobal mod (extra checks)
- */
-(function (context, factory) {
+/*global define, require, */
+(function (factory) {
     "use strict";
+    // https://github.com/umdjs/umd/blob/master/jqueryPluginCommonjs.js
     if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['exports', 'jquery'], function (exports, jQuery) {
-            factory((context.pubSub = exports), jQuery);
-        });
-    } else if (typeof exports === 'object' && typeof require === 'function') {
-        // CommonJS
-        factory(exports, require('jQuery'));
+        define(['jquery'], factory);  // AMD (async)
+    } else if (typeof exports === 'object') {
+        factory(require('jquery'));  // Node/CommonJS
     } else {
-        // Browser globals
-        factory((context.pubSub = {}), context.jQuery);
+        factory(jQuery || {});  // Browser globals
     }
-}(this, function (exports, jQuery) {
+}(function ($) {
     "use strict";
 
-    var $ = jQuery,  // this doesn't actually use jQuery.
-        hooks = {},  // protected, because screw you
+    var hooks = {},
         module;
 
+    /**
+     * what this does depends on the func signature.
+     * $.pubSub(name);
+     *   calls all funcs under this name with default params
+     *   returns the value of the last registered function
+     * $.pubSub(name, params);
+     *   calls all funcs under this name with params
+     *   returns the value of the last registered function
+     * $.pubSub(name, params, callback);
+     *   registers a new function (callback) w/ default params (params)
+     *   under the name (name)
+     * $.pubSub.reset();
+     *   removes all callbacks.
+     * $.pubSub.reset(name);
+     *   removes all callbacks under that name.
+     *
+     * @param {String} name
+     * @param {Array} params
+     * @param {Function} callback
+     * @returns {*}
+     */
     module = function (name, params, callback) {
-        /*  what this does depends on the func signature.
-            $.pubSub(name);
-                calls all funcs under this name with default params
-                returns the value of the last registered function
-            $.pubSub(name, params);
-                calls all funcs under this name with params
-                returns the value of the last registered function
-            $.pubSub(name, params, callback);
-                registers a new function (callback) w/ default params (params)
-                under the name (name)
-            $.pubSub.reset();
-                removes all callbacks.
-            $.pubSub.reset(name);
-                removes all callbacks under that name.
-
-        */
         if (!name) {  // what are you even doing?
             return;
         }
@@ -72,7 +70,7 @@
         };
     };
 
-    module.hooks = function () { return hooks; };  // R/O var. come at me bro!
+    module.hooks = function () { return hooks; };
 
     module.reset = module.reset || function (name) {
         if (name) {  // remove just a single hook
@@ -82,6 +80,6 @@
         }
     };
 
-    // attach properties to the exports object to define the exported module properties.
-    exports = module;
+    // attach module to whatever $ is
+    $.pubSub = module;
 }));
