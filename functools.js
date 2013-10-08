@@ -37,7 +37,14 @@ var $ = $ || {};
         return me.curry(func, params);
     };
 
-    /** @decorator */
+    /**
+     * Executes the function only if input type matches requirements. 
+     * @param types {Array}     e.g. ['String', 'Number, '*', 'Object']
+     * @param fn    {Function}  the function to check.
+     * 
+     * @returns {*}
+     * @decorator
+     */
     me.typed = function (types, fn) {
         var context = this,
             TypeError = function (message) {
@@ -49,13 +56,18 @@ var $ = $ || {};
             for (i = 0; i < arguments.length; i++) {
                 argType = typeof arguments[i];
                 reqType = typeof types[i];
-                if (argType !== reqType) {
+                if (argType !== reqType && reqType !== '*') {
                     throw new TypeError("Expected <" + reqType + ">, " +
                                         "got <" + argType + ">");
                 }
             }
             return fn.apply(context, arguments);
         };
+    };
+
+    me.TypedFunction = function () {};
+    me.TypedFunction.prototype.expecting = function () {
+        return;
     };
 
     if ($.pubSub) {

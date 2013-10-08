@@ -12,8 +12,24 @@ var $ = $ || {};
     if ($[moduleName]) {  // cool, it's already there
         return;
     }
+
+    var defaults = {},
+        extend = function (obj) {
+            // underscore.js mod
+            Array.prototype.slice.call(arguments, 1).forEach(function (source) {
+                var prop;
+                if (source) {
+                    for (prop in source) {
+                        obj[prop] = source[prop];
+                    }
+                }
+            });
+            return obj;
+        };
+
     var me = function (iEl, iYear, iMonth) {
-        var daysInMonth = function (year, month) {
+        var opts = extend({}, defaults, me._options || {}),
+            daysInMonth = function (year, month) {
                 // return number of days in that month.
                 return new Date(year, month, 0).getDate();
             },
@@ -54,6 +70,10 @@ var $ = $ || {};
                     weekBuffer.appendChild(createCell(i));
                 }
 
+                for (i = endIndex; i < 8; i++) {
+                    weekBuffer.appendChild(createCell('&nbsp;'));
+                }
+
                 daysList.appendChild(weekBuffer);
                 return daysList;
             },
@@ -73,7 +93,8 @@ var $ = $ || {};
                 while (daysRendered <= daysCount) {
                     table.appendChild(createRow(
                         daysRendered,
-                        Math.min(daysRendered + 7 - startingIndex, daysCount + 1),
+                        Math.min(daysRendered + 7 - startingIndex,
+                            daysCount + 1),
                         startingIndex
                     ));
 
@@ -92,6 +113,10 @@ var $ = $ || {};
             };
 
         createMonth(iYear, iMonth, iEl);
+    };
+
+    me.setup = function (options) {
+        me._options = options;
     };
 
     if ($.pubSub) {
