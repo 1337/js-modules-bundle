@@ -1,18 +1,26 @@
-/*
-    PubSub by github.com/1337
-    Provides base publisher-subscriber behaviours to scalable applications
-
-    MIT Licence
-*/
-var $ = $ || {};
-
-(function ($, moduleName) {
+/**
+ * commonjsStrictGlobal mod (extra checks)
+ */
+(function (context, factory) {
     "use strict";
-    if ($[moduleName]) {  // cool, it's already there
-        return;
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['exports', 'jquery'], function (exports, jQuery) {
+            factory((context.pubSub = exports), jQuery);
+        });
+    } else if (typeof exports === 'object' && typeof require === 'function') {
+        // CommonJS
+        factory(exports, require('jQuery'));
+    } else {
+        // Browser globals
+        factory((context.pubSub = {}), context.jQuery);
     }
-    var hooks = {},  // protected, because screw you
-        module = {};
+}(this, function (exports, jQuery) {
+    "use strict";
+
+    var $ = jQuery,  // this doesn't actually use jQuery.
+        hooks = {},  // protected, because screw you
+        module;
 
     module = function (name, params, callback) {
         /*  what this does depends on the func signature.
@@ -40,7 +48,7 @@ var $ = $ || {};
             module('log', ['added hook ' + name]);
             return;
         }
-        
+
         // correct params to [params] if only one param is passed
         if (!params instanceof Array) {
             params = [params];
@@ -56,7 +64,8 @@ var $ = $ || {};
                 lastValue = null;  // shorthand
             for (i = 0; i < funcHooks.length; i += 1) {  // call funcs
                 lastValue = funcHooks[i][0].apply(
-                    null, params || funcHooks[i][1] || []
+                    null,
+                    params || funcHooks[i][1] || []
                 );
             }
             return lastValue;
@@ -73,5 +82,6 @@ var $ = $ || {};
         }
     };
 
-    $[moduleName] = module;  // put it back
-}($, /* [desired namespace] */ 'pubSub'));
+    // attach properties to the exports object to define the exported module properties.
+    exports = module;
+}));
