@@ -6,9 +6,16 @@
  *     });
  */
 var typeKit = {
+    enabled: true,
+    
     expect: function (types, fn) {
         var self = this;
         return function (/* *args */) {
+            if (!typeKit.enabled) {
+                // check disabled
+                return fn.apply(self, args);
+            }
+
             var i,
                 args = Array.prototype.slice.apply(arguments);
 
