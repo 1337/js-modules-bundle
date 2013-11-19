@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.css" />
+        <script src="typekit.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine-html.js"></script>
+    </head>
+    <body>
+        <script>
+            describe("typeKit", function() {
+                var i, noop = function () {}, tests = [
+                    function () {
+                        var a = typeKit.expect([], noop);
+                        expect(a).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([], noop);
+                        expect(function () {
+                            a(4);
+                        }).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([Number], noop);
+                        expect(function () {
+                            a(4);
+                        }).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([String], noop);
+                        expect(function () {
+                            a(4);
+                        }).toThrow;
+                    }, function () {
+                        var a = typeKit.expect([undefined], noop);
+                        expect(function () {
+                            a(4);
+                        }).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([Number, Number], noop);
+                        expect(function () {
+                            a(4);
+                        }).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([Number], noop);
+                        expect(function () {
+                            a(true);
+                        }).toThrow;
+                    }, function () {
+                        var a = typeKit.expect([Function], noop);
+                        expect(function () {
+                            a(function () {});
+                        }).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([Object], noop);
+                        expect(function () {
+                            a({});
+                        }).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([Array], noop);
+                        expect(function () {
+                            a([]);
+                        }).not.toThrow;
+                    }, function () {
+                        var a = typeKit.expect([Array], noop);
+                        expect(function () {
+                            a({});
+                        }).toThrow;
+                    }
+                ];
+                for (i = 0; i < tests.length; i++) {
+                    it("Test " + (i + 1), tests[i]);
+                }
+            });
+        </script>
+
+        <script>
+            (function() {
+                var jasmineEnv = jasmine.getEnv();
+                jasmineEnv.updateInterval = 250;
+
+                var htmlReporter = new jasmine.HtmlReporter();
+                jasmineEnv.addReporter(htmlReporter);
+
+                jasmineEnv.specFilter = function(spec) {
+                    return htmlReporter.specFilter(spec);
+                };
+
+                var currentWindowOnload = window.onload;
+                window.onload = function() {
+                    if (currentWindowOnload) {
+                        currentWindowOnload();
+                    }
+                    execJasmine();
+                };
+
+                function execJasmine() {
+                    jasmineEnv.execute();
+                }
+            })();
+        </script>
+    </body>
+</html>

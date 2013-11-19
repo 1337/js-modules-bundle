@@ -1,28 +1,33 @@
-var LazyTask = function (fn) {
-    var self = this,
-        deferred = new $.Deferred();
+var DataSet = function (data) {
+    var deferred = new $.Deferred(), self = this;
 
-    this.run = function (data, timeout) {
-        var i,
-            results = new Array(data.length);
+    // maps (fn) with (data) whenever the page is doing nothing.
+    this.map = function (fn, timeout) {
+        var results = new Array(data.length);
+        $.map(data, function (o, i) {
+            var time = 0;
+            // setTimeouts are singly queued up anyway, so 
+            // they are always executed in order
+            setTimeout(function () {
+                var start = new Date().getTime();
+                try {
+                    results[i] = fn.apply(self, [data[i], i]);
+                } catch (e) {  // dummify result with undefined
+                    deferred.reject(e, results);
+                }
 
-        for (i = 0; i < data.length; i++) {
-            (function (i) {
-                setTimeout(function () {
-                    try {
-                        results[i] = fn.call(self, data[i]);
-                    } catch (e) {
-                        deferred.reject(results);
-                    }
-
-                    if (i === data.length - 1) {
-                        deferred.resolve(results);
-                    }
-                }, timeout || 1);
-            }(i));
-        }
-
+                time = ((time * i) +  // average runtime
+                        (new Date().getTime() - start)) / (i + 1);
+                if (i === data.length - 1) {  // last item done
+                    return deferred.resolve(results);
+                }
+            }, Math.max(time, timeout, 1));
+        });
         return deferred.promise();
+    };
+
+    this.data = function (arr) {
+        data = arr;
     };
 };
 
@@ -31,7 +36,7 @@ var LazyTask = function (fn) {
 new LazyTask(function (i) {
     return i * 2;
 })
-.run([1,2,3,4,5,6,7,8,9,10])
+.map([1,2,3,4,5,6,7,8,9,10])
 .done(function (data) {
     console.log(data);  // [2, 4, 6, 8, ...]
 });
