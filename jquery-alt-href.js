@@ -3,7 +3,7 @@
 
     /**
      * Save bandwidth... given multiple buttons with the same 
-     * caption, just give them shorter caption hrefs
+     * caption, just give them shorter caption alts
      * 
      *    a alt="#wat"
      * 
@@ -17,17 +17,19 @@
         return $(selector || '*', context || 'body')
             .hover(function (ev) {
                 var $ev = $(ev.currentTarget),
-                    href = $ev.prop('alt');
+                    alt = $ev.prop('alt'),
+                    title = $ev.prop('title'),
+                    caption = $ev.prop('caption');
 
-                if (!(href && href.length && href.indexOf('#') === 0)) {
-                    return;  // this is not a valid href
+                if (!(alt && alt.length && alt.indexOf('#') === 0)) {
+                    return;  // this is not a valid alt
                 }
 
-                if (!alts[href.substring(1)]) {
+                if (!alts[alt.substring(1)]) {
                     return;  // not in list of alts
                 }
 
-                $ev.prop('alt', alts[href.substring(1)]);
+                $ev.prop('alt', alts[alt.substring(1)]);
             }
         );
     };
