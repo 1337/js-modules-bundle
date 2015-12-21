@@ -1,0 +1,22 @@
+{
+  "name": "js-modules-bundle",
+  "version": "1.0.0",
+  "description": "Small JavaScript files with seemingly unrelated functions.",
+  "main": "js-modules-bundle.js",
+  "scripts": {
+    "test": "jshint *.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1337/js-modules-bundle.git"
+  },
+  "author": "Brian <lpppppl@gmail.com> (http://ohai.ca)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/1337/js-modules-bundle/issues"
+  },
+  "homepage": "https://github.com/1337/js-modules-bundle",
+  "devDependencies": {
+    "jshint": "2.9.1-rc1"
+  }
+}

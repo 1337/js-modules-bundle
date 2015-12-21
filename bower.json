@@ -1,0 +1,21 @@
+{
+  "name": "js-modules-bundle",
+  "homepage": "https://github.com/1337/js-modules-bundle",
+  "authors": [
+    "-"
+  ],
+  "description": "Small JavaScript files with seemingly unrelated functions.",
+  "main": "pubsub.js",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+
+  }
+}
